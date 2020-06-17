@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolAPI", "SchoolAPI.csproj", "{F3C12C3E-7764-4AC1-A723-6D18C5D6D56D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "..\Contracts\Contracts.csproj", "{C6D979B3-9823-43B5-8302-140B8773F1FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggerService", "..\LoggerService\LoggerService.csproj", "{CC18C27D-575D-4E2F-9078-25F0787B5C64}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{F3C12C3E-7764-4AC1-A723-6D18C5D6D56D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3C12C3E-7764-4AC1-A723-6D18C5D6D56D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3C12C3E-7764-4AC1-A723-6D18C5D6D56D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6D979B3-9823-43B5-8302-140B8773F1FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6D979B3-9823-43B5-8302-140B8773F1FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6D979B3-9823-43B5-8302-140B8773F1FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6D979B3-9823-43B5-8302-140B8773F1FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC18C27D-575D-4E2F-9078-25F0787B5C64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC18C27D-575D-4E2F-9078-25F0787B5C64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC18C27D-575D-4E2F-9078-25F0787B5C64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC18C27D-575D-4E2F-9078-25F0787B5C64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
