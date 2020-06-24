@@ -12,20 +12,23 @@ namespace SchoolAPI.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private ILoggerManager _logger;
+        private readonly IRepositoryManager _repository;
 
-        public WeatherForecastController(ILoggerManager logger)
+        public WeatherForecastController(IRepositoryManager repository)
         {
-            _logger = logger;
+            _repository = repository;
         }
 
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            _logger.LogInfo("Info message from our controller.");
-            _logger.LogDebug("Debug message from our controller.");
-            _logger.LogWarn("Warn message from our controller.");
-            _logger.LogError("Error message from our controller.");
+            // _repository.User.AnyMethodFromUserRepository();
+            // _repository.SecEnrollmentMgt.AnyMethodFromSecEnrollmentMgtRepository();
+            //_repository.Assignment.AnyMethodFromAssignmentRepository();
+            //_repository.CourseMgt.AnyMethodFromCourseMgtRepository();
+            //_repository.CourseSectionMgt.AnyMethodFromCourseSectionMgtRepository();
+            //_repository.SectionAssignmentMgt.AnyMethodFromSectionAssignmentMgtRepository();
+            //_repository.SectionEnrollmentMgt.AnyMethodFromSectionEnrollmentMgtRepository();
 
             return new string[] { "value1", "value2" };
         }
