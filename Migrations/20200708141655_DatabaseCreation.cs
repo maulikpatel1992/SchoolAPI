@@ -82,35 +82,6 @@ namespace SchoolAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SecAssignmentMgt",
-                columns: table => new
-                {
-                    SectionAId = table.Column<Guid>(nullable: false),
-                    SubmissionText = table.Column<string>(nullable: true),
-                    Score = table.Column<int>(nullable: false),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    UpdatedDate = table.Column<DateTime>(nullable: false),
-                    AssignmentId = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SecAssignmentMgt", x => x.SectionAId);
-                    table.ForeignKey(
-                        name: "FK_SecAssignmentMgt_Assignment_AssignmentId",
-                        column: x => x.AssignmentId,
-                        principalTable: "Assignment",
-                        principalColumn: "AssignmentId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_SecAssignmentMgt_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "SecEnrollmentMgt",
                 columns: table => new
                 {
@@ -120,22 +91,44 @@ namespace SchoolAPI.Migrations
                     CreatedDate = table.Column<DateTime>(nullable: false),
                     UpdatedDate = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false),
-                    SecCourseId = table.Column<Guid>(nullable: false)
+                    CourseId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SecEnrollmentMgt", x => x.SecEnrolId);
                     table.ForeignKey(
-                        name: "FK_SecEnrollmentMgt_CourseSectionMgt_SecCourseId",
-                        column: x => x.SecCourseId,
-                        principalTable: "CourseSectionMgt",
-                        principalColumn: "SecCourseId",
+                        name: "FK_SecEnrollmentMgt_CourseMgt_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "CourseMgt",
+                        principalColumn: "CourseId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SecEnrollmentMgt_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SecAssignmentMgt",
+                columns: table => new
+                {
+                    SectionAId = table.Column<Guid>(nullable: false),
+                    SubmissionText = table.Column<string>(nullable: true),
+                    Score = table.Column<int>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false),
+                    AssignmentId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SecAssignmentMgt", x => x.SectionAId);
+                    table.ForeignKey(
+                        name: "FK_SecAssignmentMgt_Assignment_AssignmentId",
+                        column: x => x.AssignmentId,
+                        principalTable: "Assignment",
+                        principalColumn: "AssignmentId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -180,24 +173,29 @@ namespace SchoolAPI.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "SecAssignmentMgt",
-                columns: new[] { "SectionAId", "AssignmentId", "CreatedDate", "Score", "SubmissionText", "UpdatedDate", "UserId" },
+                table: "SecEnrollmentMgt",
+                columns: new[] { "SecEnrolId", "CourseId", "CreatedDate", "EndDate", "StartDate", "UpdatedDate", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("3d490a70-94ce-4d15-9494-5240280c2ca1"), new Guid("86dba8c0-d178-41e7-938c-ed49778fb51a"), new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), 90, "Created home page", new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("3d490a70-94ce-4d15-9494-5248280c2ce1") },
-                    { new Guid("3d490a70-94ce-4d15-9494-5241280c2cb6"), new Guid("86dba8c0-d178-41e7-938c-ed49778fb52a"), new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), 95, "Found 25 prime from given dataset.", new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("3d490a70-94ce-4d15-9494-5248280c2ce6") },
-                    { new Guid("3d490a70-94ce-4d15-9494-5242280c2cc1"), new Guid("86dba8c0-d178-41e7-938c-ed49778fb53a"), new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), 100, "Created pattern", new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("3d490a70-94ce-4d15-9494-5248280c2ce7") }
+                    { new Guid("1d490a70-94ce-4d15-9494-5248280c2ce1"), new Guid("c9d4c053-49b6-410c-bc78-1d54a9991870"), new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("3d490a70-94ce-4d15-9494-5248280c2ce1") },
+                    { new Guid("2d490a70-94ce-4d15-9494-5248280c2ce1"), new Guid("c9d4c053-49b6-410c-bc78-2d54a9991870"), new DateTime(2020, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 8, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 6, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 6, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("3d490a70-94ce-4d15-9494-5248280c2ce6") },
+                    { new Guid("4d490a70-94ce-4d15-9494-5248280c2ce1"), new Guid("c9d4c053-49b6-410c-bc78-3d54a9991870"), new DateTime(2020, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 8, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 6, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("3d490a70-94ce-4d15-9494-5248280c2ce7") }
                 });
 
             migrationBuilder.InsertData(
-                table: "SecEnrollmentMgt",
-                columns: new[] { "SecEnrolId", "CreatedDate", "EndDate", "SecCourseId", "StartDate", "UpdatedDate", "UserId" },
-                values: new object[,]
-                {
-                    { new Guid("1d490a70-94ce-4d15-9494-5248280c2ce1"), new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("1d490a70-90ce-4d15-9494-5248280c2ce1"), new DateTime(2020, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("3d490a70-94ce-4d15-9494-5248280c2ce1") },
-                    { new Guid("2d490a70-94ce-4d15-9494-5248280c2ce1"), new DateTime(2020, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 8, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("0d490a70-94ce-4d15-9494-5248280c2ce1"), new DateTime(2020, 6, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 6, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("3d490a70-94ce-4d15-9494-5248280c2ce6") },
-                    { new Guid("4d490a70-94ce-4d15-9494-5248280c2ce1"), new DateTime(2020, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 8, 29, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("1d490a70-94ce-4d15-9494-5248280c2ce1"), new DateTime(2020, 6, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("3d490a70-94ce-4d15-9494-5248280c2ce7") }
-                });
+                table: "SecAssignmentMgt",
+                columns: new[] { "SectionAId", "AssignmentId", "CreatedDate", "Score", "SubmissionText", "UpdatedDate" },
+                values: new object[] { new Guid("3d490a70-94ce-4d15-9494-5240280c2ca1"), new Guid("86dba8c0-d178-41e7-938c-ed49778fb51a"), new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), 90, "Created home page", new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified) });
+
+            migrationBuilder.InsertData(
+                table: "SecAssignmentMgt",
+                columns: new[] { "SectionAId", "AssignmentId", "CreatedDate", "Score", "SubmissionText", "UpdatedDate" },
+                values: new object[] { new Guid("3d490a70-94ce-4d15-9494-5241280c2cb6"), new Guid("86dba8c0-d178-41e7-938c-ed49778fb52a"), new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), 95, "Found 25 prime from given dataset.", new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified) });
+
+            migrationBuilder.InsertData(
+                table: "SecAssignmentMgt",
+                columns: new[] { "SectionAId", "AssignmentId", "CreatedDate", "Score", "SubmissionText", "UpdatedDate" },
+                values: new object[] { new Guid("3d490a70-94ce-4d15-9494-5242280c2cc1"), new Guid("86dba8c0-d178-41e7-938c-ed49778fb53a"), new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), 100, "Created pattern", new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Assignment_CourseId",
@@ -215,14 +213,9 @@ namespace SchoolAPI.Migrations
                 column: "AssignmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SecAssignmentMgt_UserId",
-                table: "SecAssignmentMgt",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SecEnrollmentMgt_SecCourseId",
+                name: "IX_SecEnrollmentMgt_CourseId",
                 table: "SecEnrollmentMgt",
-                column: "SecCourseId");
+                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SecEnrollmentMgt_UserId",
@@ -233,6 +226,9 @@ namespace SchoolAPI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CourseSectionMgt");
+
+            migrationBuilder.DropTable(
                 name: "SecAssignmentMgt");
 
             migrationBuilder.DropTable(
@@ -240,9 +236,6 @@ namespace SchoolAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Assignment");
-
-            migrationBuilder.DropTable(
-                name: "CourseSectionMgt");
 
             migrationBuilder.DropTable(
                 name: "User");

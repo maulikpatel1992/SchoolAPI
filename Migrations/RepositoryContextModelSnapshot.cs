@@ -203,14 +203,9 @@ namespace SchoolAPI.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AssignmentId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("SecAssignmentMgt");
 
@@ -222,8 +217,7 @@ namespace SchoolAPI.Migrations
                             CreatedDate = new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Score = 90,
                             SubmissionText = "Created home page",
-                            UpdatedDate = new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = new Guid("3d490a70-94ce-4d15-9494-5248280c2ce1")
+                            UpdatedDate = new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -232,8 +226,7 @@ namespace SchoolAPI.Migrations
                             CreatedDate = new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Score = 95,
                             SubmissionText = "Found 25 prime from given dataset.",
-                            UpdatedDate = new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = new Guid("3d490a70-94ce-4d15-9494-5248280c2ce6")
+                            UpdatedDate = new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
@@ -242,8 +235,7 @@ namespace SchoolAPI.Migrations
                             CreatedDate = new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Score = 100,
                             SubmissionText = "Created pattern",
-                            UpdatedDate = new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = new Guid("3d490a70-94ce-4d15-9494-5248280c2ce7")
+                            UpdatedDate = new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -254,14 +246,14 @@ namespace SchoolAPI.Migrations
                         .HasColumnName("SecEnrolId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid>("SecCourseId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -274,7 +266,7 @@ namespace SchoolAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SecCourseId");
+                    b.HasIndex("CourseId");
 
                     b.HasIndex("UserId");
 
@@ -284,9 +276,9 @@ namespace SchoolAPI.Migrations
                         new
                         {
                             Id = new Guid("1d490a70-94ce-4d15-9494-5248280c2ce1"),
+                            CourseId = new Guid("c9d4c053-49b6-410c-bc78-1d54a9991870"),
                             CreatedDate = new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndDate = new DateTime(2020, 8, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecCourseId = new Guid("1d490a70-90ce-4d15-9494-5248280c2ce1"),
                             StartDate = new DateTime(2020, 5, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedDate = new DateTime(2020, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = new Guid("3d490a70-94ce-4d15-9494-5248280c2ce1")
@@ -294,9 +286,9 @@ namespace SchoolAPI.Migrations
                         new
                         {
                             Id = new Guid("2d490a70-94ce-4d15-9494-5248280c2ce1"),
+                            CourseId = new Guid("c9d4c053-49b6-410c-bc78-2d54a9991870"),
                             CreatedDate = new DateTime(2020, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndDate = new DateTime(2020, 8, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecCourseId = new Guid("0d490a70-94ce-4d15-9494-5248280c2ce1"),
                             StartDate = new DateTime(2020, 6, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedDate = new DateTime(2020, 6, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = new Guid("3d490a70-94ce-4d15-9494-5248280c2ce6")
@@ -304,9 +296,9 @@ namespace SchoolAPI.Migrations
                         new
                         {
                             Id = new Guid("4d490a70-94ce-4d15-9494-5248280c2ce1"),
+                            CourseId = new Guid("c9d4c053-49b6-410c-bc78-3d54a9991870"),
                             CreatedDate = new DateTime(2020, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndDate = new DateTime(2020, 8, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecCourseId = new Guid("1d490a70-94ce-4d15-9494-5248280c2ce1"),
                             StartDate = new DateTime(2020, 6, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedDate = new DateTime(2020, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = new Guid("3d490a70-94ce-4d15-9494-5248280c2ce7")
@@ -404,19 +396,13 @@ namespace SchoolAPI.Migrations
                         .HasForeignKey("AssignmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Entities.Models.User", "User")
-                        .WithMany("SecAssignmentMgt")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Entities.Models.SecEnrollmentMgt", b =>
                 {
-                    b.HasOne("Entities.Models.CourseSectionMgt", "CourseSectionMgt")
+                    b.HasOne("Entities.Models.CourseMgt", "CourseMgt")
                         .WithMany("SecEnrollmentMgt")
-                        .HasForeignKey("SecCourseId")
+                        .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

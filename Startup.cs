@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using NLog;
 using System.IO;
 using SchoolAPI.Extensions;
+using AutoMapper;
 
 namespace SchoolAPI
 {
@@ -33,6 +34,7 @@ namespace SchoolAPI
             services.ConfigureLoggerService();
             services.ConfigureSqlContext(Configuration);
             services.ConfigureRepositoryManager();
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddControllers();
         }
