@@ -18,6 +18,7 @@ namespace SchoolAPI
             CreateMap<User, UserDto>();
             CreateMap<CourseSectionMgt, CourseSectionDto>();
             CreateMap<Assignment, AssignmentDto>();
+            CreateMap<UserForCreationDto, User>();
         }
     }
 }

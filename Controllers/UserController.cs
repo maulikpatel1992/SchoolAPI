@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Entities;
 using Entities.DataTransferObjects;
+using Entities.Models;
+
 namespace SchoolAPI.Controllers
 {
     [Route("api/users")]
@@ -44,7 +46,7 @@ namespace SchoolAPI.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name ="UserById")]
         public IActionResult GetUser(Guid id)
         {
             var user = _repository.User.GetUser(id, trackChanges: false);
@@ -60,5 +62,23 @@ namespace SchoolAPI.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult CreateUser([FromBody] UserForCreationDto user)
+        {
+            if (user == null)
+            {
+                _logger.LogError("UserForCreationDto object sent from client is null.");
+                return BadRequest("UserForCreationDto object is null");
+            }
+
+            var userEntity = _mapper.Map<User>(user);
+
+            _repository.User.CreateUser(userEntity);
+            _repository.Save();
+
+            var userToReturn = _mapper.Map<UserDto>(userEntity);
+
+            return CreatedAtRoute("UserById", new { id = userToReturn.Id }, userToReturn);
+        }
     }
 }
