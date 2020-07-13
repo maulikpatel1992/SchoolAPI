@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Contracts;
 using Entities.DataTransferObjects;
+using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,7 +43,7 @@ namespace SchoolAPI.Controllers
             return Ok(assignmentsDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetAssignmentForCourse")]
         public IActionResult GetAssignmentForCourse(Guid courseId, Guid id)
         {
             var course = _repository.CourseMgt.GetCourse(courseId, trackChanges: false);
@@ -62,6 +63,84 @@ namespace SchoolAPI.Controllers
             var assignment = _mapper.Map<AssignmentDto>(assignmentDb);
 
             return Ok(assignment);
+        }
+
+        [HttpPost]
+        public IActionResult CreateAssignmentForCourse(Guid courseId, [FromBody] AssignmentForCreationDto assignment)
+        {
+            if (assignment == null)
+            {
+                _logger.LogError("AssignmentForCreationDto object sent from client is null.");
+                return BadRequest("AssignmentForCreationDto object is null");
+            }
+
+            var course = _repository.CourseMgt.GetCourse(courseId, trackChanges: false);
+            if (course == null)
+            {
+                _logger.LogInfo($"Course with id: {courseId} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            var assignmentEntity = _mapper.Map<Assignment>(assignment);
+
+            _repository.Assignment.CreateAssignmentForCourse(courseId, assignmentEntity);
+            _repository.Save();
+
+            var assignmentToReturn = _mapper.Map<AssignmentDto>(assignmentEntity);
+
+            return CreatedAtRoute("GetAssignmentForCourse", new { courseId, id = assignmentToReturn.Id }, assignmentToReturn);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteAssignmentForCourse(Guid courseId, Guid id)
+        {
+            var course = _repository.CourseMgt.GetCourse(courseId, trackChanges: false);
+            if (course == null)
+            {
+                _logger.LogInfo($"Course with id: {courseId} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            var assignmentForCourse = _repository.Assignment.GetAssignment(courseId, id, trackChanges: false);
+            if (assignmentForCourse == null)
+            {
+                _logger.LogInfo($"Assignment with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            _repository.Assignment.DeleteAssignment(assignmentForCourse);
+            _repository.Save();
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateAssignmentForCourse(Guid courseId, Guid id, [FromBody] AssignmentForUpdateDto assignment)
+        {
+            if (assignment == null)
+            {
+                _logger.LogError("AssignmentForUpdateDto object sent from client is null.");
+                return BadRequest("AssignmentForUpdateDto object is null");
+            }
+
+            var course = _repository.CourseMgt.GetCourse(courseId, trackChanges: false);
+            if (course == null)
+            {
+                _logger.LogInfo($"Course with id: {courseId} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            var assignmentEntity = _repository.Assignment.GetAssignment(courseId, id, trackChanges: true);
+            if (assignmentEntity == null)
+            {
+                _logger.LogInfo($"Assignment with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            _mapper.Map(assignment, assignmentEntity);
+            _repository.Save();
+
+            return NoContent();
         }
     }
 }
