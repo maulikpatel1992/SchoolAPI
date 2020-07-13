@@ -7,6 +7,7 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SchoolAPI.Controllers
@@ -138,6 +139,40 @@ namespace SchoolAPI.Controllers
             }
 
             _mapper.Map(assignment, assignmentEntity);
+            _repository.Save();
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult PartiallyUpdateAssignmentForCourse(Guid courseId, Guid id, [FromBody] JsonPatchDocument<AssignmentForUpdateDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                _logger.LogError("patchDoc object sent from client is null.");
+                return BadRequest("patchDoc object is null");
+            }
+
+            var course = _repository.CourseMgt.GetCourse(courseId, trackChanges: false);
+            if (course == null)
+            {
+                _logger.LogInfo($"Course with id: {courseId} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            var assignmentEntity = _repository.Assignment.GetAssignment(courseId, id, trackChanges: true);
+            if (assignmentEntity == null)
+            {
+                _logger.LogInfo($"Assignment with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            var assignmentToPatch = _mapper.Map<AssignmentForUpdateDto>(assignmentEntity);
+
+            patchDoc.ApplyTo(assignmentToPatch);
+
+            _mapper.Map(assignmentToPatch, assignmentEntity);
+
             _repository.Save();
 
             return NoContent();
