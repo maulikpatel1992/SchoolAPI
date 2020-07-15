@@ -10,18 +10,17 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace SchoolAPI.Controllers
 {
-    [Route("api/users/{UserId}/enrollments")]
+    [Route("api/assignments/{SecAId}/sections")]
     [ApiController]
-    public class SecEnrollmentController : ControllerBase
+    public class SecAssignmentController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
 
-        public SecEnrollmentController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
+        public SecAssignmentController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
@@ -29,7 +28,7 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetEnrollmentsForUser(Guid userId)
+        public IActionResult GetSectionsForAssignment(Guid userId)
         {
             var user = _repository.User.GetUser(userId, trackChanges: false);
             if (user == null)
@@ -44,7 +43,7 @@ namespace SchoolAPI.Controllers
 
             return Ok(enrollmentsDto);
         }
-       [HttpGet("{id}", Name = "GetEnrollmentForUser")]
+        [HttpGet("{id}", Name = "GetEnrollmentForUser")]
         public IActionResult GetEnrollmentForUser(Guid userId, Guid id)
         {
             var user = _repository.User.GetUser(userId, trackChanges: false);
@@ -69,7 +68,7 @@ namespace SchoolAPI.Controllers
         [HttpPost]
         public IActionResult CreateEnrollmentForUser(Guid userId, [FromBody] EnrollmentForCreationDto enrollment)
         {
-            
+
 
             if (enrollment == null)
             {
@@ -131,10 +130,10 @@ namespace SchoolAPI.Controllers
                 _logger.LogError("EnrollmentForUpdateDto object sent from client is null.");
                 return BadRequest("EnrollmentForUpdateDto object is null");
             }
-            if (!ModelState.IsValid) 
-            { 
-                _logger.LogError("Invalid model state for the EnrollmentForUpdateDto object"); 
-                return UnprocessableEntity(ModelState); 
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the EnrollmentForUpdateDto object");
+                return UnprocessableEntity(ModelState);
             }
 
             var user = _repository.User.GetUser(userId, trackChanges: false);
@@ -183,7 +182,7 @@ namespace SchoolAPI.Controllers
             var enrollmentToPatch = _mapper.Map<EnrollmentForUpdateDto>(enrollmentEntity);
 
             patchDoc.ApplyTo(enrollmentToPatch, ModelState);
-            
+
             TryValidateModel(enrollmentToPatch);
 
             if (!ModelState.IsValid)

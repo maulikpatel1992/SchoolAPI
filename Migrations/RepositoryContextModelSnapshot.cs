@@ -198,7 +198,9 @@ namespace SchoolAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("SubmissionText")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");

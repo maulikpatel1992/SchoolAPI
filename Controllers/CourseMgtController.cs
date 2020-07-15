@@ -7,6 +7,7 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SchoolAPI.ModelBinders;
 
@@ -68,6 +69,12 @@ namespace SchoolAPI.Controllers
             {
                 _logger.LogError("CourseForCreationDto object sent from client is null.");
                 return BadRequest("CourseForCreationDto object is null");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the CourseForCreationDto object");
+                return UnprocessableEntity(ModelState);
             }
 
             var courseEntity = _mapper.Map<CourseMgt>(course);
@@ -149,6 +156,12 @@ namespace SchoolAPI.Controllers
                 return BadRequest("CourseForUpdateDto object is null");
             }
 
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the CourseForUpdateDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
             var courseEntity = _repository.CourseMgt.GetCourse(id, trackChanges: true);
             if (courseEntity == null)
             {
@@ -157,6 +170,43 @@ namespace SchoolAPI.Controllers
             }
 
             _mapper.Map(course, courseEntity);
+            _repository.Save();
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult PartiallyUpdateCourse(Guid Id, [FromBody] JsonPatchDocument<CourseForUpdateDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                _logger.LogError("patchDoc object sent from client is null.");
+                return BadRequest("patchDoc object is null");
+            }
+
+            var course = _repository.CourseMgt.GetCourse(Id, trackChanges: true);
+            if (course == null)
+            {
+                _logger.LogInfo($"Course with id: {Id} doesn't exist in the database.");
+                return NotFound();
+            }
+
+
+
+            var CourseToPatch = _mapper.Map<CourseForUpdateDto>(course);
+
+            patchDoc.ApplyTo(CourseToPatch, ModelState);
+
+            TryValidateModel(CourseToPatch);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
+        
+
+            _mapper.Map(CourseToPatch, course);
+
             _repository.Save();
 
             return NoContent();

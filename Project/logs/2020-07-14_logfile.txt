@@ -1,0 +1,27 @@
+2020-07-14 06:55:47.4779 INFO User with id: 00000000-0000-0000-0000-000000000000 doesn't exist in the database.
+2020-07-14 07:44:08.5753 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 07:45:40.4917 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 07:48:05.4313 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 07:49:17.5260 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 07:50:06.5836 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 07:51:41.5539 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 07:52:11.4384 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 07:56:36.8320 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 07:57:42.8797 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 07:59:25.8202 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 08:01:35.3970 ERROR Invalid model state for the EnrollmentForCreationDto object
+2020-07-14 21:17:04.7292 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 21:40:09.4357 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 21:55:50.5149 ERROR Invalid model state for the EnrollmentForCreationDto object
+2020-07-14 22:00:18.6510 ERROR Invalid model state for the EnrollmentForCreationDto object
+2020-07-14 22:02:19.8890 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 22:07:38.1425 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 22:37:50.4392 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 22:37:58.3649 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 22:39:20.6200 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 22:40:17.1505 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 22:41:51.8799 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 22:44:35.8873 ERROR Invalid model state for the EnrollmentForCreationDto object
+2020-07-14 23:15:13.6662 ERROR Invalid model state for the UserForCreationDto object
+2020-07-14 23:16:07.5359 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-14 23:27:03.8309 ERROR Invalid model state for the AssignmentForCreationDto object

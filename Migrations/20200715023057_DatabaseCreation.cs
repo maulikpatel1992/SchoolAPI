@@ -115,7 +115,7 @@ namespace SchoolAPI.Migrations
                 columns: table => new
                 {
                     SectionAId = table.Column<Guid>(nullable: false),
-                    SubmissionText = table.Column<string>(nullable: true),
+                    SubmissionText = table.Column<string>(maxLength: 200, nullable: false),
                     Score = table.Column<int>(nullable: false),
                     CreatedDate = table.Column<DateTime>(nullable: false),
                     UpdatedDate = table.Column<DateTime>(nullable: false),

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SchoolAPI.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20200708141655_DatabaseCreation")]
+    [Migration("20200715023057_DatabaseCreation")]
     partial class DatabaseCreation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -200,7 +200,9 @@ namespace SchoolAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("SubmissionText")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");

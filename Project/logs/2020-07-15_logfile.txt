@@ -1,0 +1,11 @@
+2020-07-15 07:24:52.9570 ERROR Invalid model state for the AssignmentForCreationDto object
+2020-07-15 07:46:59.4573 ERROR EnrollmentForCreationDto object sent from client is null.
+2020-07-15 08:38:39.0243 ERROR patchDoc object sent from client is null.
+2020-07-15 08:38:56.9867 ERROR patchDoc object sent from client is null.
+2020-07-15 08:39:04.4494 ERROR patchDoc object sent from client is null.
+2020-07-15 08:40:09.6722 ERROR patchDoc object sent from client is null.
+2020-07-15 08:41:28.6671 ERROR patchDoc object sent from client is null.
+2020-07-15 08:41:52.2181 ERROR patchDoc object sent from client is null.
+2020-07-15 08:44:57.6590 ERROR patchDoc object sent from client is null.
+2020-07-15 08:46:03.2568 ERROR patchDoc object sent from client is null.
+2020-07-15 08:48:06.7506 ERROR EnrollmentForCreationDto object sent from client is null.

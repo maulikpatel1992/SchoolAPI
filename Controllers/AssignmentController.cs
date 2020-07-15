@@ -75,6 +75,12 @@ namespace SchoolAPI.Controllers
                 return BadRequest("AssignmentForCreationDto object is null");
             }
 
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the AssignmentForCreationDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
             var course = _repository.CourseMgt.GetCourse(courseId, trackChanges: false);
             if (course == null)
             {
@@ -123,6 +129,12 @@ namespace SchoolAPI.Controllers
                 _logger.LogError("AssignmentForUpdateDto object sent from client is null.");
                 return BadRequest("AssignmentForUpdateDto object is null");
             }
+            
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the AssignmentForUpdateDto object");
+                return UnprocessableEntity(ModelState);
+            }
 
             var course = _repository.CourseMgt.GetCourse(courseId, trackChanges: false);
             if (course == null)
@@ -169,7 +181,14 @@ namespace SchoolAPI.Controllers
 
             var assignmentToPatch = _mapper.Map<AssignmentForUpdateDto>(assignmentEntity);
 
-            patchDoc.ApplyTo(assignmentToPatch);
+            patchDoc.ApplyTo(assignmentToPatch, ModelState);
+            TryValidateModel(assignmentToPatch);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
+
 
             _mapper.Map(assignmentToPatch, assignmentEntity);
 

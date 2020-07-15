@@ -75,6 +75,12 @@ namespace SchoolAPI.Controllers
                 return BadRequest("CourseSectionForCreationDto object is null");
             }
 
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the CourseSectionForCreationDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
             var course = _repository.CourseMgt.GetCourse(courseId, trackChanges: false);
             if (course == null)
             {
@@ -124,6 +130,12 @@ namespace SchoolAPI.Controllers
                 return BadRequest("CourseSectionForUpdateDto object is null");
             }
 
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the CourseSectionForUpdateDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
             var course = _repository.CourseMgt.GetCourse(courseId, trackChanges: false);
             if (course == null)
             {
@@ -169,7 +181,14 @@ namespace SchoolAPI.Controllers
 
             var coursesectionToPatch = _mapper.Map<CourseSectionForUpdateDto>(coursesectionEntity);
 
-            patchDoc.ApplyTo(coursesectionToPatch);
+            patchDoc.ApplyTo(coursesectionToPatch, ModelState);
+
+            TryValidateModel(coursesectionToPatch);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
 
             _mapper.Map(coursesectionToPatch, coursesectionEntity);
 

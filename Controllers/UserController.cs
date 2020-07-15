@@ -11,6 +11,7 @@ using Entities;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using SchoolAPI.ModelBinders;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace SchoolAPI.Controllers
 {
@@ -70,6 +71,12 @@ namespace SchoolAPI.Controllers
             {
                 _logger.LogError("UserForCreationDto object sent from client is null.");
                 return BadRequest("UserForCreationDto object is null");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the UserForCreationDto object");
+                return UnprocessableEntity(ModelState);
             }
 
             var userEntity = _mapper.Map<User>(user);
@@ -151,6 +158,12 @@ namespace SchoolAPI.Controllers
                 return BadRequest("UserForUpdateDto object is null");
             }
 
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the UserForUpdateDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
             var userEntity = _repository.User.GetUser(id, trackChanges: true);
             if (userEntity == null)
             {
@@ -159,6 +172,41 @@ namespace SchoolAPI.Controllers
             }
 
             _mapper.Map(user, userEntity);
+            _repository.Save();
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public IActionResult PartiallyUpdateUser(Guid Id, [FromBody] JsonPatchDocument<UserForUpdateDto> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                _logger.LogError("patchDoc object sent from client is null.");
+                return BadRequest("patchDoc object is null");
+            }
+
+            var user = _repository.User.GetUser(Id, trackChanges: true);
+            if (user == null)
+            {
+                _logger.LogInfo($"User with id: {Id} doesn't exist in the database.");
+                return NotFound();
+            }
+
+            
+
+            var UserToPatch = _mapper.Map<UserForUpdateDto>(user);
+
+            patchDoc.ApplyTo(UserToPatch, ModelState);
+            TryValidateModel(UserToPatch);
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the patch document");
+                return UnprocessableEntity(ModelState);
+            }
+
+            _mapper.Map(UserToPatch, user);
+
             _repository.Save();
 
             return NoContent();
