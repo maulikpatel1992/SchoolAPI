@@ -18,6 +18,7 @@ namespace SchoolAPI
             CreateMap<User, UserDto>();
             CreateMap<CourseSectionMgt, CourseSectionDto>();
             CreateMap<Assignment, AssignmentDto>();
+            CreateMap<SecAssignmentMgt, SecAssignmentDto>();
             CreateMap<UserForCreationDto, User>();
             CreateMap<EnrollmentForCreationDto, SecEnrollmentMgt>();
             CreateMap<CourseForCreationDto, CourseMgt>();
@@ -25,6 +26,7 @@ namespace SchoolAPI
             CreateMap<UserForUpdateDto, User>();
             CreateMap<CourseSectionForUpdateDto, CourseSectionMgt>().ReverseMap(); 
             CreateMap<AssignmentForUpdateDto, Assignment>().ReverseMap();
+            CreateMap<SecAssignmentForUpdateDto, SecAssignmentMgt>().ReverseMap();
             CreateMap<CourseForUpdateDto, CourseMgt>();
         }
     }
