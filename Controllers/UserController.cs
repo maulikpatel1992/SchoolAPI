@@ -17,6 +17,7 @@ namespace SchoolAPI.Controllers
 {
     [Route("api/users")]
     [ApiController]
+    [ApiExplorerSettings(GroupName = "v1")]
     public class UserController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
@@ -30,6 +31,10 @@ namespace SchoolAPI.Controllers
             _mapper = mapper;
         }
 
+        /// <summary> 
+        /// Gets the list of all users
+        /// </summary>
+        /// <returns>The companies list</returns>
         [HttpGet]
         public IActionResult GetUsers()
         {

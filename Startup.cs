@@ -34,6 +34,7 @@ namespace SchoolAPI
             services.ConfigureLoggerService();
             services.ConfigureSqlContext(Configuration);
             services.ConfigureRepositoryManager();
+            services.ConfigureSwagger();
             services.AddAutoMapper(typeof(Startup));
             services.Configure<ApiBehaviorOptions>(options => 
             { 
@@ -66,6 +67,12 @@ namespace SchoolAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger(); 
+            app.UseSwaggerUI(s => 
+            { 
+                s.SwaggerEndpoint("/swagger/v1/swagger.json", "School API v1");
             });
         }
     }

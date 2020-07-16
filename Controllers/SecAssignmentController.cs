@@ -27,7 +27,7 @@ namespace SchoolAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+       /* [HttpGet]
         public IActionResult GetSectionsForAssignment(Guid userId)
         {
             var user = _repository.User.GetUser(userId, trackChanges: false);
@@ -196,6 +196,6 @@ namespace SchoolAPI.Controllers
             _repository.Save();
 
             return NoContent();
-        }
+        }*/
     }
 }
