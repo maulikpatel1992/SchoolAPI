@@ -1,0 +1,7 @@
+2020-07-17 07:51:50.7762 INFO Assignment with id: 00000000-0000-0000-0000-000000000000 doesn't exist in the database.
+2020-07-17 21:49:35.5072 INFO Assignment section with id: 1df45f05-c136-433c-7b96-08d82a9b1a99 doesn't exist in the database.
+2020-07-17 22:01:07.7012 INFO Section with id: 1df45f05-c136-433c-7b96-08d82a9b1a99 doesn't exist in the database.
+2020-07-17 22:01:37.8259 INFO Assignment section with id: 1df45f05-c136-433c-7b96-08d82a9b1a99 doesn't exist in the database.
+2020-07-17 22:24:38.4723 ERROR Invalid model state for the patch document
+2020-07-17 22:27:57.6520 ERROR Invalid model state for the patch document
+2020-07-17 22:44:30.8491 INFO Assignment with id: 3d490a70-94ce-4d15-9494-5242280c2cc1 doesn't exist in the database.

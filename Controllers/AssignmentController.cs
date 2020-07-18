@@ -44,6 +44,8 @@ namespace SchoolAPI.Controllers
             return Ok(assignmentsDto);
         }
 
+        
+
         [HttpGet("{id}", Name = "GetAssignmentForCourse")]
         public IActionResult GetAssignmentForCourse(Guid courseId, Guid id)
         {

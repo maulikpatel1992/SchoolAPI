@@ -1,0 +1,16 @@
+2020-07-16 22:02:21.6580 ERROR Something went wrong in the GetAllAssignmentsForSec action AutoMapper.AutoMapperMappingException: Error mapping types.
+
+Mapping types:
+List`1 -> IEnumerable`1
+System.Collections.Generic.List`1[[Entities.Models.Assignment, Entities, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]] -> System.Collections.Generic.IEnumerable`1[[Entities.DataTransferObjects.SecAssignmentDto, Entities, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]
+ ---> AutoMapper.AutoMapperMappingException: Missing type map configuration or unsupported mapping.
+
+Mapping types:
+Assignment -> SecAssignmentDto
+Entities.Models.Assignment -> Entities.DataTransferObjects.SecAssignmentDto
+   at lambda_method(Closure , Assignment , SecAssignmentDto , ResolutionContext )
+   at lambda_method(Closure , List`1 , IEnumerable`1 , ResolutionContext )
+   --- End of inner exception stack trace ---
+   at lambda_method(Closure , List`1 , IEnumerable`1 , ResolutionContext )
+   at lambda_method(Closure , Object , Object , ResolutionContext )
+   at SchoolAPI.Controllers.AssignmentForSecController.GetAllAssignmentsForSec() in C:\Users\Maharaj\source\repos\SchoolAPI\Controllers\AssignmentForSecController.cs:line 34

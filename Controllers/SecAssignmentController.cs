@@ -12,8 +12,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SchoolAPI.Controllers
 {
-    [Route("api/assignments/{SecAId}/sections")]
+    [Route("api/assignmentsforsec/{assignmentId}/assignmentsections")]
     [ApiController]
+    [ApiExplorerSettings(GroupName = "v1")]
     public class SecAssignmentController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
@@ -27,137 +28,137 @@ namespace SchoolAPI.Controllers
             _mapper = mapper;
         }
 
-       /* [HttpGet]
-        public IActionResult GetSectionsForAssignment(Guid userId)
+        [HttpGet]
+        public IActionResult GetAssignmentSectionsForAssignment(Guid assignmentId)
         {
-            var user = _repository.User.GetUser(userId, trackChanges: false);
-            if (user == null)
+            var assignment = _repository.Assignment.GetAssignmentForSec(assignmentId, trackChanges: false);
+            if (assignment == null)
             {
-                _logger.LogInfo($"User with id: {userId} doesn't exist in the database.");
+                _logger.LogInfo($"Assignment with id: {assignmentId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var enrollmentsFromDb = _repository.SecEnrollmentMgt.GetEnrollments(userId, trackChanges: false);
+            var assignmentsectionsFromDb = _repository.SecAssignmentMgt.GetAssignmentSections(assignmentId, trackChanges: false);
 
-            var enrollmentsDto = _mapper.Map<IEnumerable<EnrollmentDto>>(enrollmentsFromDb);
+            var assignmentsectionsDto = _mapper.Map<IEnumerable<SecAssignmentDto>>(assignmentsectionsFromDb);
 
-            return Ok(enrollmentsDto);
+            return Ok(assignmentsectionsDto);
         }
-        [HttpGet("{id}", Name = "GetEnrollmentForUser")]
-        public IActionResult GetEnrollmentForUser(Guid userId, Guid id)
+
+        [HttpGet("{id}", Name = "GetAssignmentsectionForAssignment")]
+        public IActionResult GetAssignmentsectionForAssignment(Guid assignmentId, Guid id)
         {
-            var user = _repository.User.GetUser(userId, trackChanges: false);
-            if (user == null)
+            var assignment = _repository.Assignment.GetAssignmentForSec(assignmentId, trackChanges: false);
+            if (assignment == null)
             {
-                _logger.LogInfo($"User with id: {userId} doesn't exist in the database.");
+                _logger.LogInfo($"Assignment with id: {assignmentId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var enrollmentDb = _repository.SecEnrollmentMgt.GetEnrollment(userId, id, trackChanges: false);
-            if (enrollmentDb == null)
+            var assignmentsectionDb = _repository.SecAssignmentMgt.GetAssignmentSection(assignmentId, id, trackChanges: false);
+            if (assignmentsectionDb == null)
             {
-                _logger.LogInfo($"Enrollment with id: {id} doesn't exist in the database.");
+                _logger.LogInfo($"Assignment section with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var enrollment = _mapper.Map<EnrollmentDto>(enrollmentDb);
+            var assignmentsection = _mapper.Map<SecAssignmentDto>(assignmentsectionDb);
 
-            return Ok(enrollment);
+            return Ok(assignmentsection);
         }
 
         [HttpPost]
-        public IActionResult CreateEnrollmentForUser(Guid userId, [FromBody] EnrollmentForCreationDto enrollment)
+        public IActionResult CreateAssignmentSectionForAssignment(Guid assignmentId, [FromBody] SecAssignmentForCreationDto assignmentSection)
         {
-
-
-            if (enrollment == null)
+            if (assignmentSection == null)
             {
-                _logger.LogError("EnrollmentForCreationDto object sent from client is null.");
-                return BadRequest("EnrollmentForCreationDto object is null");
+                _logger.LogError("SecAssignmentForCreationDto object sent from client is null.");
+                return BadRequest("SecAssignmentForCreationDto object is null");
             }
 
             if (!ModelState.IsValid)
             {
-                _logger.LogError("Invalid model state for the EnrollmentForCreationDto object");
+                _logger.LogError("Invalid model state for the SecAssignmentForCreationDto object");
                 return UnprocessableEntity(ModelState);
             }
 
-            var user = _repository.User.GetUser(userId, trackChanges: false);
-            if (user == null)
+            var assignment = _repository.Assignment.GetAssignmentForSec(assignmentId, trackChanges: false);
+            if (assignment == null)
             {
-                _logger.LogInfo($"User with id: {userId} doesn't exist in the database.");
+                _logger.LogInfo($"Assignment with id: {assignmentId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var enrollmentEntity = _mapper.Map<SecEnrollmentMgt>(enrollment);
+            var assignmentsectionEntity = _mapper.Map<SecAssignmentMgt>(assignmentSection);
 
-            _repository.SecEnrollmentMgt.CreateEnrollmentForUser(userId, enrollmentEntity);
+            _repository.SecAssignmentMgt.CreateAssignmentSectionForAssignment(assignmentId, assignmentsectionEntity);
             _repository.Save();
 
-            var enrollmentToReturn = _mapper.Map<EnrollmentDto>(enrollmentEntity);
+            var assignmensectionToReturn = _mapper.Map<SecAssignmentDto>(assignmentsectionEntity);
 
-            return CreatedAtRoute("GetEnrollmentForUser", new { userId, id = enrollmentToReturn.Id }, enrollmentToReturn);
+            return CreatedAtRoute("GetAssignmentsectionForAssignment", new { assignmentId, id = assignmensectionToReturn.Id }, assignmensectionToReturn);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteEnrollmentForUser(Guid userId, Guid id)
+        public IActionResult DeleteAssignmentSectionForAssignment(Guid assignmentId, Guid id)
         {
-            var user = _repository.User.GetUser(userId, trackChanges: false);
-            if (user == null)
+            var assignment = _repository.Assignment.GetAssignmentForSec(assignmentId, trackChanges: false);
+            if (assignment == null)
             {
-                _logger.LogInfo($"User with id: {userId} doesn't exist in the database.");
+                _logger.LogInfo($"Assignment with id: {assignmentId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var enrollmentForUser = _repository.SecEnrollmentMgt.GetEnrollment(userId, id, trackChanges: false);
-            if (enrollmentForUser == null)
+            var assignmentsectionForAssignment = _repository.SecAssignmentMgt.GetAssignmentSection(assignmentId, id, trackChanges: false);
+            if (assignmentsectionForAssignment == null)
             {
-                _logger.LogInfo($"Enrollment with id: {id} doesn't exist in the database.");
+                _logger.LogInfo($"Assignment Section with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
 
-            _repository.SecEnrollmentMgt.DeleteEnrollment(enrollmentForUser);
+            _repository.SecAssignmentMgt.DeleteAssignmentSection(assignmentsectionForAssignment);
             _repository.Save();
 
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateEnrollmentForUser(Guid userId, Guid id, [FromBody] EnrollmentForUpdateDto enrollment)
+        public IActionResult UpdateAssignmentSectionForAssignment(Guid assignmentId, Guid id, [FromBody] SecAssignmentForUpdateDto assignmentsection)
         {
-            if (enrollment == null)
+            if (assignmentsection == null)
             {
-                _logger.LogError("EnrollmentForUpdateDto object sent from client is null.");
-                return BadRequest("EnrollmentForUpdateDto object is null");
+                _logger.LogError("SecAssignmentForUpdateDto object sent from client is null.");
+                return BadRequest("SecAssignmentForUpdateDto object is null");
             }
+
             if (!ModelState.IsValid)
             {
-                _logger.LogError("Invalid model state for the EnrollmentForUpdateDto object");
+                _logger.LogError("Invalid model state for the SecAssignmentForUpdateDto object");
                 return UnprocessableEntity(ModelState);
             }
 
-            var user = _repository.User.GetUser(userId, trackChanges: false);
-            if (user == null)
+            var assignment = _repository.Assignment.GetAssignmentForSec(assignmentId, trackChanges: false);
+            if (assignment == null)
             {
-                _logger.LogInfo($"User with id: {userId} doesn't exist in the database.");
+                _logger.LogInfo($"Assignment with id: {assignmentId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var enrollmentEntity = _repository.SecEnrollmentMgt.GetEnrollment(userId, id, trackChanges: true);
-            if (enrollmentEntity == null)
+            var assignmentsectionEntity = _repository.SecAssignmentMgt.GetAssignmentSection(assignmentId, id, trackChanges: true);
+            if (assignmentsectionEntity == null)
             {
-                _logger.LogInfo($"Enrollment with id: {id} doesn't exist in the database.");
+                _logger.LogInfo($"Section with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
 
-            _mapper.Map(enrollment, enrollmentEntity);
+            _mapper.Map(assignmentsection, assignmentsectionEntity);
             _repository.Save();
 
             return NoContent();
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PartiallyUpdateEnrollmentForUser(Guid userId, Guid id, [FromBody] JsonPatchDocument<EnrollmentForUpdateDto> patchDoc)
+        public IActionResult PartiallyUpdateAssignmentSectionForAssignment(Guid assignmentId, Guid id, [FromBody] JsonPatchDocument<SecAssignmentForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
             {
@@ -165,37 +166,36 @@ namespace SchoolAPI.Controllers
                 return BadRequest("patchDoc object is null");
             }
 
-            var user = _repository.User.GetUser(userId, trackChanges: false);
-            if (user == null)
+            var assignment = _repository.Assignment.GetAssignmentForSec(assignmentId, trackChanges: false);
+            if (assignment == null)
             {
-                _logger.LogInfo($"User with id: {userId} doesn't exist in the database.");
+                _logger.LogInfo($"Assignment with id: {assignmentId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var enrollmentEntity = _repository.SecEnrollmentMgt.GetEnrollment(userId, id, trackChanges: true);
-            if (enrollmentEntity == null)
+            var assignmentsectionEntity = _repository.SecAssignmentMgt.GetAssignmentSection(assignmentId, id, trackChanges: true);
+            if (assignmentsectionEntity == null)
             {
-                _logger.LogInfo($"Enrollment with id: {id} doesn't exist in the database.");
+                _logger.LogInfo($"Assignmentsection with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var enrollmentToPatch = _mapper.Map<EnrollmentForUpdateDto>(enrollmentEntity);
+            var assignmentsectionToPatch = _mapper.Map<SecAssignmentForUpdateDto>(assignmentsectionEntity);
 
-            patchDoc.ApplyTo(enrollmentToPatch, ModelState);
+            patchDoc.ApplyTo(assignmentsectionToPatch, ModelState);
 
-            TryValidateModel(enrollmentToPatch);
-
+            TryValidateModel(assignmentsectionToPatch);
             if (!ModelState.IsValid)
             {
                 _logger.LogError("Invalid model state for the patch document");
                 return UnprocessableEntity(ModelState);
             }
 
-            _mapper.Map(enrollmentToPatch, enrollmentEntity);
+            _mapper.Map(assignmentsectionToPatch, assignmentsectionEntity);
 
             _repository.Save();
 
             return NoContent();
-        }*/
+        }
     }
 }
