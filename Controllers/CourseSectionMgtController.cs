@@ -6,9 +6,11 @@ using AutoMapper;
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Entities.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace SchoolAPI.Controllers
 {
@@ -28,7 +30,7 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCoursesectionsForCourse(Guid courseId)
+        public async Task<IActionResult> GetCoursesectionsForCourse(Guid courseId, [FromQuery] CourseSectionMgtParameters courseSectionMgtParameters)
         {
             var course = await _repository.CourseMgt.GetCourseAsync(courseId, trackChanges: false);
             if (course == null)
@@ -37,7 +39,9 @@ namespace SchoolAPI.Controllers
                 return NotFound();
             }
 
-            var coursesectionsFromDb = await _repository.CourseSectionMgt.GetCoursesectionsAsync(courseId, trackChanges: false);
+            var coursesectionsFromDb = await _repository.CourseSectionMgt.GetCoursesectionsAsync(courseId, courseSectionMgtParameters, trackChanges: false);
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(coursesectionsFromDb.MetaData));
 
             var coursesectionsDto = _mapper.Map<IEnumerable<CourseSectionDto>>(coursesectionsFromDb);
 

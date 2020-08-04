@@ -6,10 +6,11 @@ using AutoMapper;
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Entities.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-
+using Newtonsoft.Json;
 
 namespace SchoolAPI.Controllers
 {
@@ -39,6 +40,9 @@ namespace SchoolAPI.Controllers
             }
 
             var enrollmentsFromDb = await _repository.SecEnrollmentMgt.GetEnrollmentsAsync(userId, secEnrollmentParameters, trackChanges: false);
+
+            Response.Headers.Add("X-Pagination", 
+                JsonConvert.SerializeObject(enrollmentsFromDb.MetaData));
 
             var enrollmentsDto = _mapper.Map<IEnumerable<EnrollmentDto>>(enrollmentsFromDb);
 
