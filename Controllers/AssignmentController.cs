@@ -28,16 +28,16 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAssignmentsForCourse(Guid courseId)
+        public async Task<IActionResult> GetAssignmentsForCourse(Guid courseId)
         {
-            var course = _repository.CourseMgt.GetCourse(courseId, trackChanges: false);
+            var course = await _repository.CourseMgt.GetCourseAsync(courseId, trackChanges: false);
             if (course == null)
             {
                 _logger.LogInfo($"Course with id: {courseId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var assignmentsFromDb = _repository.Assignment.GetAssignments(courseId, trackChanges: false);
+            var assignmentsFromDb =await _repository.Assignment.GetAssignmentsAsync(courseId, trackChanges: false);
 
             var assignmentsDto = _mapper.Map<IEnumerable<AssignmentDto>>(assignmentsFromDb);
 
@@ -47,16 +47,16 @@ namespace SchoolAPI.Controllers
         
 
         [HttpGet("{id}", Name = "GetAssignmentForCourse")]
-        public IActionResult GetAssignmentForCourse(Guid courseId, Guid id)
+        public async Task<IActionResult> GetAssignmentForCourse(Guid courseId, Guid id)
         {
-            var course = _repository.CourseMgt.GetCourse(courseId, trackChanges: false);
+            var course = await _repository.CourseMgt.GetCourseAsync(courseId, trackChanges: false);
             if (course == null)
             {
                 _logger.LogInfo($"Course with id: {courseId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var assignmentDb = _repository.Assignment.GetAssignment(courseId, id, trackChanges: false);
+            var assignmentDb =await _repository.Assignment.GetAssignmentAsync(courseId, id, trackChanges: false);
             if (assignmentDb == null)
             {
                 _logger.LogInfo($"Assignment with id: {id} doesn't exist in the database.");
@@ -69,7 +69,7 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateAssignmentForCourse(Guid courseId, [FromBody] AssignmentForCreationDto assignment)
+        public async Task<IActionResult> CreateAssignmentForCourse(Guid courseId, [FromBody] AssignmentForCreationDto assignment)
         {
             if (assignment == null)
             {
@@ -83,7 +83,7 @@ namespace SchoolAPI.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-            var course = _repository.CourseMgt.GetCourse(courseId, trackChanges: false);
+            var course =await _repository.CourseMgt.GetCourseAsync(courseId, trackChanges: false);
             if (course == null)
             {
                 _logger.LogInfo($"Course with id: {courseId} doesn't exist in the database.");
@@ -93,7 +93,7 @@ namespace SchoolAPI.Controllers
             var assignmentEntity = _mapper.Map<Assignment>(assignment);
 
             _repository.Assignment.CreateAssignmentForCourse(courseId, assignmentEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var assignmentToReturn = _mapper.Map<AssignmentDto>(assignmentEntity);
 
@@ -101,16 +101,16 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteAssignmentForCourse(Guid courseId, Guid id)
+        public async Task<IActionResult> DeleteAssignmentForCourse(Guid courseId, Guid id)
         {
-            var course = _repository.CourseMgt.GetCourse(courseId, trackChanges: false);
+            var course = await _repository.CourseMgt.GetCourseAsync(courseId, trackChanges: false);
             if (course == null)
             {
                 _logger.LogInfo($"Course with id: {courseId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var assignmentForCourse = _repository.Assignment.GetAssignment(courseId, id, trackChanges: false);
+            var assignmentForCourse = await _repository.Assignment.GetAssignmentAsync(courseId, id, trackChanges: false);
             if (assignmentForCourse == null)
             {
                 _logger.LogInfo($"Assignment with id: {id} doesn't exist in the database.");
@@ -118,13 +118,13 @@ namespace SchoolAPI.Controllers
             }
 
             _repository.Assignment.DeleteAssignment(assignmentForCourse);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateAssignmentForCourse(Guid courseId, Guid id, [FromBody] AssignmentForUpdateDto assignment)
+        public async Task<IActionResult> UpdateAssignmentForCourse(Guid courseId, Guid id, [FromBody] AssignmentForUpdateDto assignment)
         {
             if (assignment == null)
             {
@@ -138,14 +138,14 @@ namespace SchoolAPI.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-            var course = _repository.CourseMgt.GetCourse(courseId, trackChanges: false);
+            var course = await _repository.CourseMgt.GetCourseAsync(courseId, trackChanges: false);
             if (course == null)
             {
                 _logger.LogInfo($"Course with id: {courseId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var assignmentEntity = _repository.Assignment.GetAssignment(courseId, id, trackChanges: true);
+            var assignmentEntity = await _repository.Assignment.GetAssignmentAsync(courseId, id, trackChanges: true);
             if (assignmentEntity == null)
             {
                 _logger.LogInfo($"Assignment with id: {id} doesn't exist in the database.");
@@ -153,13 +153,13 @@ namespace SchoolAPI.Controllers
             }
 
             _mapper.Map(assignment, assignmentEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PartiallyUpdateAssignmentForCourse(Guid courseId, Guid id, [FromBody] JsonPatchDocument<AssignmentForUpdateDto> patchDoc)
+        public async Task<IActionResult> PartiallyUpdateAssignmentForCourse(Guid courseId, Guid id, [FromBody] JsonPatchDocument<AssignmentForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
             {
@@ -167,14 +167,14 @@ namespace SchoolAPI.Controllers
                 return BadRequest("patchDoc object is null");
             }
 
-            var course = _repository.CourseMgt.GetCourse(courseId, trackChanges: false);
+            var course =await _repository.CourseMgt.GetCourseAsync(courseId, trackChanges: false);
             if (course == null)
             {
                 _logger.LogInfo($"Course with id: {courseId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var assignmentEntity = _repository.Assignment.GetAssignment(courseId, id, trackChanges: true);
+            var assignmentEntity =await _repository.Assignment.GetAssignmentAsync(courseId, id, trackChanges: true);
             if (assignmentEntity == null)
             {
                 _logger.LogInfo($"Assignment with id: {id} doesn't exist in the database.");
@@ -194,7 +194,7 @@ namespace SchoolAPI.Controllers
 
             _mapper.Map(assignmentToPatch, assignmentEntity);
 
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }

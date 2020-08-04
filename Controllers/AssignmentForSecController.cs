@@ -26,11 +26,11 @@ namespace SchoolAPI.Controllers
             _mapper = mapper;
         }
 
-        protected IActionResult GetAllAssignmentsForSec()
+        protected async Task<IActionResult> GetAllAssignmentsForSec()
         {
             try
             {
-                var assignments = _repository.Assignment.GetAllAssignmentsForSec(trackChanges: false);
+                var assignments =await _repository.Assignment.GetAllAssignmentsForSecAsync(trackChanges: false);
 
                 var assignmentsDto = _mapper.Map<IEnumerable<AssignmentDto>>(assignments);
 
@@ -44,9 +44,9 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpGet("{id}", Name = "GetAssignmentForSecById")]
-        public IActionResult GetAssignmentForSec(Guid id)
+        public async Task<IActionResult> GetAssignmentForSec(Guid id)
         {
-            var assignment = _repository.Assignment.GetAssignmentForSec(id, trackChanges: false);
+            var assignment = await _repository.Assignment.GetAssignmentForSecAsync(id, trackChanges: false);
             if (assignment == null)
             {
                 _logger.LogInfo($"Assignment with id: {id} doesn't exist in the database.");
@@ -61,7 +61,7 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateAssignment([FromBody] AssignmentForCreationDto assignment)
+        public async Task<IActionResult> CreateAssignment([FromBody] AssignmentForCreationDto assignment)
         {
             if (assignment == null)
             {
@@ -78,7 +78,7 @@ namespace SchoolAPI.Controllers
             var assignmentEntity = _mapper.Map<Assignment>(assignment);
 
             _repository.Assignment.CreateAssignmentForSec(assignmentEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var assignmentToReturn = _mapper.Map<AssignmentDto>(assignmentEntity);
 

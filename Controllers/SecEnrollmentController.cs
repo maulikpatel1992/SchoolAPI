@@ -29,32 +29,32 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetEnrollmentsForUser(Guid userId)
+        public async Task<IActionResult> GetEnrollmentsForUser(Guid userId, [FromQuery] SecEnrollmentParameters secEnrollmentParameters)
         {
-            var user = _repository.User.GetUser(userId, trackChanges: false);
+            var user = await _repository.User.GetUserAsync(userId, trackChanges: false);
             if (user == null)
             {
                 _logger.LogInfo($"User with id: {userId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var enrollmentsFromDb = _repository.SecEnrollmentMgt.GetEnrollments(userId, trackChanges: false);
+            var enrollmentsFromDb = await _repository.SecEnrollmentMgt.GetEnrollmentsAsync(userId, secEnrollmentParameters, trackChanges: false);
 
             var enrollmentsDto = _mapper.Map<IEnumerable<EnrollmentDto>>(enrollmentsFromDb);
 
             return Ok(enrollmentsDto);
         }
        [HttpGet("{id}", Name = "GetEnrollmentForUser")]
-        public IActionResult GetEnrollmentForUser(Guid userId, Guid id)
+        public async Task<IActionResult> GetEnrollmentForUser(Guid userId, Guid id)
         {
-            var user = _repository.User.GetUser(userId, trackChanges: false);
+            var user = await _repository.User.GetUserAsync(userId, trackChanges: false);
             if (user == null)
             {
                 _logger.LogInfo($"User with id: {userId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var enrollmentDb = _repository.SecEnrollmentMgt.GetEnrollment(userId, id, trackChanges: false);
+            var enrollmentDb = await _repository.SecEnrollmentMgt.GetEnrollmentAsync(userId, id, trackChanges: false);
             if (enrollmentDb == null)
             {
                 _logger.LogInfo($"Enrollment with id: {id} doesn't exist in the database.");
@@ -67,7 +67,7 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateEnrollmentForUser(Guid userId, [FromBody] EnrollmentForCreationDto enrollment)
+        public async Task<IActionResult> CreateEnrollmentForUser(Guid userId, [FromBody] EnrollmentForCreationDto enrollment)
         {
             
 
@@ -83,7 +83,7 @@ namespace SchoolAPI.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-            var user = _repository.User.GetUser(userId, trackChanges: false);
+            var user = await _repository.User.GetUserAsync(userId, trackChanges: false);
             if (user == null)
             {
                 _logger.LogInfo($"User with id: {userId} doesn't exist in the database.");
@@ -93,7 +93,7 @@ namespace SchoolAPI.Controllers
             var enrollmentEntity = _mapper.Map<SecEnrollmentMgt>(enrollment);
 
             _repository.SecEnrollmentMgt.CreateEnrollmentForUser(userId, enrollmentEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var enrollmentToReturn = _mapper.Map<EnrollmentDto>(enrollmentEntity);
 
@@ -101,16 +101,16 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteEnrollmentForUser(Guid userId, Guid id)
+        public async Task<IActionResult> DeleteEnrollmentForUser(Guid userId, Guid id)
         {
-            var user = _repository.User.GetUser(userId, trackChanges: false);
+            var user = await _repository.User.GetUserAsync(userId, trackChanges: false);
             if (user == null)
             {
                 _logger.LogInfo($"User with id: {userId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var enrollmentForUser = _repository.SecEnrollmentMgt.GetEnrollment(userId, id, trackChanges: false);
+            var enrollmentForUser = await _repository.SecEnrollmentMgt.GetEnrollmentAsync(userId, id, trackChanges: false);
             if (enrollmentForUser == null)
             {
                 _logger.LogInfo($"Enrollment with id: {id} doesn't exist in the database.");
@@ -118,13 +118,13 @@ namespace SchoolAPI.Controllers
             }
 
             _repository.SecEnrollmentMgt.DeleteEnrollment(enrollmentForUser);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateEnrollmentForUser(Guid userId, Guid id, [FromBody] EnrollmentForUpdateDto enrollment)
+        public async Task<IActionResult> UpdateEnrollmentForUser(Guid userId, Guid id, [FromBody] EnrollmentForUpdateDto enrollment)
         {
             if (enrollment == null)
             {
@@ -137,14 +137,14 @@ namespace SchoolAPI.Controllers
                 return UnprocessableEntity(ModelState); 
             }
 
-            var user = _repository.User.GetUser(userId, trackChanges: false);
+            var user = await _repository.User.GetUserAsync(userId, trackChanges: false);
             if (user == null)
             {
                 _logger.LogInfo($"User with id: {userId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var enrollmentEntity = _repository.SecEnrollmentMgt.GetEnrollment(userId, id, trackChanges: true);
+            var enrollmentEntity = await _repository.SecEnrollmentMgt.GetEnrollmentAsync(userId, id, trackChanges: true);
             if (enrollmentEntity == null)
             {
                 _logger.LogInfo($"Enrollment with id: {id} doesn't exist in the database.");
@@ -152,13 +152,13 @@ namespace SchoolAPI.Controllers
             }
 
             _mapper.Map(enrollment, enrollmentEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PartiallyUpdateEnrollmentForUser(Guid userId, Guid id, [FromBody] JsonPatchDocument<EnrollmentForUpdateDto> patchDoc)
+        public async Task<IActionResult> PartiallyUpdateEnrollmentForUser(Guid userId, Guid id, [FromBody] JsonPatchDocument<EnrollmentForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
             {
@@ -166,14 +166,14 @@ namespace SchoolAPI.Controllers
                 return BadRequest("patchDoc object is null");
             }
 
-            var user = _repository.User.GetUser(userId, trackChanges: false);
+            var user = await _repository.User.GetUserAsync(userId, trackChanges: false);
             if (user == null)
             {
                 _logger.LogInfo($"User with id: {userId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var enrollmentEntity = _repository.SecEnrollmentMgt.GetEnrollment(userId, id, trackChanges: true);
+            var enrollmentEntity = await _repository.SecEnrollmentMgt.GetEnrollmentAsync(userId, id, trackChanges: true);
             if (enrollmentEntity == null)
             {
                 _logger.LogInfo($"Enrollment with id: {id} doesn't exist in the database.");
@@ -194,7 +194,7 @@ namespace SchoolAPI.Controllers
 
             _mapper.Map(enrollmentToPatch, enrollmentEntity);
 
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }

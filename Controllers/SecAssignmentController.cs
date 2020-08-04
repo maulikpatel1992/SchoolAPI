@@ -29,16 +29,16 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAssignmentSectionsForAssignment(Guid assignmentId)
+        public async Task<IActionResult> GetAssignmentSectionsForAssignment(Guid assignmentId)
         {
-            var assignment = _repository.Assignment.GetAssignmentForSec(assignmentId, trackChanges: false);
+            var assignment = await _repository.Assignment.GetAssignmentForSecAsync(assignmentId, trackChanges: false);
             if (assignment == null)
             {
                 _logger.LogInfo($"Assignment with id: {assignmentId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var assignmentsectionsFromDb = _repository.SecAssignmentMgt.GetAssignmentSections(assignmentId, trackChanges: false);
+            var assignmentsectionsFromDb = await _repository.SecAssignmentMgt.GetAssignmentSectionsAsync(assignmentId, trackChanges: false);
 
             var assignmentsectionsDto = _mapper.Map<IEnumerable<SecAssignmentDto>>(assignmentsectionsFromDb);
 
@@ -46,16 +46,16 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpGet("{id}", Name = "GetAssignmentsectionForAssignment")]
-        public IActionResult GetAssignmentsectionForAssignment(Guid assignmentId, Guid id)
+        public async Task<IActionResult> GetAssignmentsectionForAssignment(Guid assignmentId, Guid id)
         {
-            var assignment = _repository.Assignment.GetAssignmentForSec(assignmentId, trackChanges: false);
+            var assignment =await _repository.Assignment.GetAssignmentForSecAsync(assignmentId, trackChanges: false);
             if (assignment == null)
             {
                 _logger.LogInfo($"Assignment with id: {assignmentId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var assignmentsectionDb = _repository.SecAssignmentMgt.GetAssignmentSection(assignmentId, id, trackChanges: false);
+            var assignmentsectionDb =await _repository.SecAssignmentMgt.GetAssignmentSectionAsync(assignmentId, id, trackChanges: false);
             if (assignmentsectionDb == null)
             {
                 _logger.LogInfo($"Assignment section with id: {id} doesn't exist in the database.");
@@ -68,7 +68,7 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateAssignmentSectionForAssignment(Guid assignmentId, [FromBody] SecAssignmentForCreationDto assignmentSection)
+        public async Task<IActionResult> CreateAssignmentSectionForAssignment(Guid assignmentId, [FromBody] SecAssignmentForCreationDto assignmentSection)
         {
             if (assignmentSection == null)
             {
@@ -82,7 +82,7 @@ namespace SchoolAPI.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-            var assignment = _repository.Assignment.GetAssignmentForSec(assignmentId, trackChanges: false);
+            var assignment = await _repository.Assignment.GetAssignmentForSecAsync(assignmentId, trackChanges: false);
             if (assignment == null)
             {
                 _logger.LogInfo($"Assignment with id: {assignmentId} doesn't exist in the database.");
@@ -92,7 +92,7 @@ namespace SchoolAPI.Controllers
             var assignmentsectionEntity = _mapper.Map<SecAssignmentMgt>(assignmentSection);
 
             _repository.SecAssignmentMgt.CreateAssignmentSectionForAssignment(assignmentId, assignmentsectionEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var assignmensectionToReturn = _mapper.Map<SecAssignmentDto>(assignmentsectionEntity);
 
@@ -100,16 +100,16 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteAssignmentSectionForAssignment(Guid assignmentId, Guid id)
+        public async Task<IActionResult> DeleteAssignmentSectionForAssignment(Guid assignmentId, Guid id)
         {
-            var assignment = _repository.Assignment.GetAssignmentForSec(assignmentId, trackChanges: false);
+            var assignment = await _repository.Assignment.GetAssignmentForSecAsync(assignmentId, trackChanges: false);
             if (assignment == null)
             {
                 _logger.LogInfo($"Assignment with id: {assignmentId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var assignmentsectionForAssignment = _repository.SecAssignmentMgt.GetAssignmentSection(assignmentId, id, trackChanges: false);
+            var assignmentsectionForAssignment =await _repository.SecAssignmentMgt.GetAssignmentSectionAsync(assignmentId, id, trackChanges: false);
             if (assignmentsectionForAssignment == null)
             {
                 _logger.LogInfo($"Assignment Section with id: {id} doesn't exist in the database.");
@@ -117,13 +117,13 @@ namespace SchoolAPI.Controllers
             }
 
             _repository.SecAssignmentMgt.DeleteAssignmentSection(assignmentsectionForAssignment);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateAssignmentSectionForAssignment(Guid assignmentId, Guid id, [FromBody] SecAssignmentForUpdateDto assignmentsection)
+        public async Task<IActionResult> UpdateAssignmentSectionForAssignment(Guid assignmentId, Guid id, [FromBody] SecAssignmentForUpdateDto assignmentsection)
         {
             if (assignmentsection == null)
             {
@@ -137,14 +137,14 @@ namespace SchoolAPI.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-            var assignment = _repository.Assignment.GetAssignmentForSec(assignmentId, trackChanges: false);
+            var assignment = await _repository.Assignment.GetAssignmentForSecAsync(assignmentId, trackChanges: false);
             if (assignment == null)
             {
                 _logger.LogInfo($"Assignment with id: {assignmentId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var assignmentsectionEntity = _repository.SecAssignmentMgt.GetAssignmentSection(assignmentId, id, trackChanges: true);
+            var assignmentsectionEntity =await _repository.SecAssignmentMgt.GetAssignmentSectionAsync(assignmentId, id, trackChanges: true);
             if (assignmentsectionEntity == null)
             {
                 _logger.LogInfo($"Section with id: {id} doesn't exist in the database.");
@@ -152,13 +152,13 @@ namespace SchoolAPI.Controllers
             }
 
             _mapper.Map(assignmentsection, assignmentsectionEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PartiallyUpdateAssignmentSectionForAssignment(Guid assignmentId, Guid id, [FromBody] JsonPatchDocument<SecAssignmentForUpdateDto> patchDoc)
+        public async Task<IActionResult> PartiallyUpdateAssignmentSectionForAssignment(Guid assignmentId, Guid id, [FromBody] JsonPatchDocument<SecAssignmentForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
             {
@@ -166,14 +166,14 @@ namespace SchoolAPI.Controllers
                 return BadRequest("patchDoc object is null");
             }
 
-            var assignment = _repository.Assignment.GetAssignmentForSec(assignmentId, trackChanges: false);
+            var assignment = await _repository.Assignment.GetAssignmentForSecAsync(assignmentId, trackChanges: false);
             if (assignment == null)
             {
                 _logger.LogInfo($"Assignment with id: {assignmentId} doesn't exist in the database.");
                 return NotFound();
             }
 
-            var assignmentsectionEntity = _repository.SecAssignmentMgt.GetAssignmentSection(assignmentId, id, trackChanges: true);
+            var assignmentsectionEntity =await _repository.SecAssignmentMgt.GetAssignmentSectionAsync(assignmentId, id, trackChanges: true);
             if (assignmentsectionEntity == null)
             {
                 _logger.LogInfo($"Assignmentsection with id: {id} doesn't exist in the database.");
@@ -193,7 +193,7 @@ namespace SchoolAPI.Controllers
 
             _mapper.Map(assignmentsectionToPatch, assignmentsectionEntity);
 
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }

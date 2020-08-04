@@ -36,6 +36,11 @@ namespace SchoolAPI
             services.ConfigureRepositoryManager();
             services.ConfigureSwagger();
             services.AddAutoMapper(typeof(Startup));
+
+            //services.AddAuthentication();
+            //services.ConfigureIdentity();
+            //services.ConfigureJWT(Configuration);
+
             services.Configure<ApiBehaviorOptions>(options => 
             { 
                 options.SuppressModelStateInvalidFilter = true; 
@@ -62,7 +67,9 @@ namespace SchoolAPI
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthentication();
+            app.UseAuthorization(); 
+            
 
             app.UseEndpoints(endpoints =>
             {

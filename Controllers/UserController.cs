@@ -36,11 +36,11 @@ namespace SchoolAPI.Controllers
         /// </summary>
         /// <returns>The companies list</returns>
         [HttpGet]
-        public IActionResult GetUsers()
+        public async Task<IActionResult> GetUsers()
         {
             try
             {
-                var users = _repository.User.GetAllUsers(trackChanges: false);
+                var users = await _repository.User.GetAllUsersAsync(trackChanges: false);
 
                 var usersDto = _mapper.Map<IEnumerable<UserDto>>(users);
 
@@ -54,9 +54,9 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpGet("{id}", Name ="UserById")]
-        public IActionResult GetUser(Guid id)
+        public async Task<IActionResult> GetUser(Guid id)
         {
-            var user = _repository.User.GetUser(id, trackChanges: false);
+            var user = await _repository.User.GetUserAsync(id, trackChanges: false);
             if (user == null)
             {
                 _logger.LogInfo($"User with id: {id} doesn't exist in the database.");
@@ -70,7 +70,7 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateUser([FromBody] UserForCreationDto user)
+        public async Task<IActionResult> CreateUser([FromBody] UserForCreationDto user)
         {
             if (user == null)
             {
@@ -87,7 +87,7 @@ namespace SchoolAPI.Controllers
             var userEntity = _mapper.Map<User>(user);
 
             _repository.User.CreateUser(userEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var userToReturn = _mapper.Map<UserDto>(userEntity);
 
@@ -95,7 +95,7 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpGet("collection/({ids})", Name = "UserCollection")]
-        public IActionResult GetUserCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+        public async Task<IActionResult> GetUserCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
             if (ids == null)
             {
@@ -103,7 +103,7 @@ namespace SchoolAPI.Controllers
                 return BadRequest("Parameter ids is null");
             }
 
-            var userEntities = _repository.User.GetByIds(ids, trackChanges: false);
+            var userEntities = await _repository.User.GetByIdsAsync(ids, trackChanges: false);
 
             if (ids.Count() != userEntities.Count())
             {
@@ -116,7 +116,7 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpPost("collection")]
-        public IActionResult CreateUserCollection([FromBody] IEnumerable<UserForCreationDto> userCollection)
+        public async Task<IActionResult> CreateUserCollection([FromBody] IEnumerable<UserForCreationDto> userCollection)
         {
             if (userCollection == null)
             {
@@ -130,7 +130,7 @@ namespace SchoolAPI.Controllers
                 _repository.User.CreateUser(user);
             }
 
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var userCollectionToReturn = _mapper.Map<IEnumerable<UserDto>>(userEntities);
             var ids = string.Join(",", userCollectionToReturn.Select(c => c.Id));
@@ -139,9 +139,9 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser(Guid id)
+        public async Task<IActionResult> DeleteUser(Guid id)
         {
-            var user = _repository.User.GetUser(id, trackChanges: false);
+            var user = await _repository.User.GetUserAsync(id, trackChanges: false);
             if (user == null)
             {
                 _logger.LogInfo($"User with id: {id} doesn't exist in the database.");
@@ -149,13 +149,13 @@ namespace SchoolAPI.Controllers
             }
 
             _repository.User.DeleteUser(user);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(Guid id, [FromBody] UserForUpdateDto user)
+        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UserForUpdateDto user)
         {
             if (user == null)
             {
@@ -169,7 +169,7 @@ namespace SchoolAPI.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-            var userEntity = _repository.User.GetUser(id, trackChanges: true);
+            var userEntity = await _repository.User.GetUserAsync(id, trackChanges: true);
             if (userEntity == null)
             {
                 _logger.LogInfo($"User with id: {id} doesn't exist in the database.");
@@ -177,13 +177,14 @@ namespace SchoolAPI.Controllers
             }
 
             _mapper.Map(user, userEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
+
 
             return NoContent();
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PartiallyUpdateUser(Guid Id, [FromBody] JsonPatchDocument<UserForUpdateDto> patchDoc)
+        public async Task<IActionResult> PartiallyUpdateUser(Guid Id, [FromBody] JsonPatchDocument<UserForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
             {
@@ -191,7 +192,7 @@ namespace SchoolAPI.Controllers
                 return BadRequest("patchDoc object is null");
             }
 
-            var user = _repository.User.GetUser(Id, trackChanges: true);
+            var user = await _repository.User.GetUserAsync(Id, trackChanges: true);
             if (user == null)
             {
                 _logger.LogInfo($"User with id: {Id} doesn't exist in the database.");
@@ -212,7 +213,7 @@ namespace SchoolAPI.Controllers
 
             _mapper.Map(UserToPatch, user);
 
-            _repository.Save();
+            await _repository.SaveAsync();
 
             return NoContent();
         }
