@@ -6,6 +6,7 @@ using AutoMapper;
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Entities.RequestFeatures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -29,11 +30,11 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCourses()
+        public async Task<IActionResult> GetCourses([FromQuery] CourseMgtParameters courseMgtParameters)
         {
             try
             {
-                var courses =await _repository.CourseMgt.GetAllCoursesAsync(trackChanges: false);
+                var courses =await _repository.CourseMgt.GetAllCoursesAsync(courseMgtParameters, trackChanges: false);
 
                 var coursesDto = _mapper.Map<IEnumerable<CourseDto>>(courses);
 
