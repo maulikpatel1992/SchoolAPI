@@ -12,11 +12,13 @@ using Entities.DataTransferObjects;
 using Entities.Models;
 using SchoolAPI.ModelBinders;
 using Microsoft.AspNetCore.JsonPatch;
+using Marvin.Cache.Headers;
 
 namespace SchoolAPI.Controllers
 {
     [Route("api/users")]
     [ApiController]
+    //[ResponseCache(CacheProfileName = "120SecondsDuration")]
     [ApiExplorerSettings(GroupName = "v1")]
     public class UserController : ControllerBase
     {
@@ -54,6 +56,8 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpGet("{id}", Name ="UserById")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> GetUser(Guid id)
         {
             var user = await _repository.User.GetUserAsync(id, trackChanges: false);

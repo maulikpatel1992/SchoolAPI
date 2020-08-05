@@ -6,6 +6,7 @@ using AutoMapper;
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +47,8 @@ namespace SchoolAPI.Controllers
         }
 
         [HttpGet("{id}", Name = "GetAssignmentsectionForAssignment")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> GetAssignmentsectionForAssignment(Guid assignmentId, Guid id)
         {
             var assignment =await _repository.Assignment.GetAssignmentForSecAsync(assignmentId, trackChanges: false);

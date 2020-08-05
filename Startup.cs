@@ -36,6 +36,8 @@ namespace SchoolAPI
             services.ConfigureRepositoryManager();
             services.ConfigureSwagger();
             services.AddAutoMapper(typeof(Startup));
+            services.ConfigureResponseCaching();
+            services.ConfigureHttpCacheHeaders();
 
             //services.AddAuthentication();
             //services.ConfigureIdentity();
@@ -50,6 +52,7 @@ namespace SchoolAPI
             { 
                 config.RespectBrowserAcceptHeader = true;
                 config.ReturnHttpNotAcceptable = true;
+                config.CacheProfiles.Add("120SecondsDuration", new CacheProfile { Duration = 120 });
             }).AddNewtonsoftJson()
                 .AddXmlDataContractSerializerFormatters();
             
@@ -64,7 +67,8 @@ namespace SchoolAPI
             }
 
             app.UseHttpsRedirection();
-
+            app.UseResponseCaching();
+            app.UseHttpCacheHeaders();
             app.UseRouting();
 
             //app.UseAuthentication();
