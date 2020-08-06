@@ -4,7 +4,7 @@
 ### Developed By: 
 ### 1) Maulik V Patel (mvp46)
 ### 2) Jeremy Langenderfer (jl822)
-### #) Jay Patel (jap256)
+### 3) Jay Patel (jap256)
 This API can perform the following operations:
 
 ### i) User Registration: Any user must be able to register through this page. Details like username, email id, password, first name, last name, phone number etc. should be captured.
