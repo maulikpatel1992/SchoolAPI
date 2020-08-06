@@ -94,8 +94,7 @@ This API can perform the following operations:
 ### xii) Paging
 #### We implemented Paging into our API
 ![Privilege escalation](https://github.com/maulikpatel1992/SchoolAPI/blob/Final_Snapshots/final%20project/paging_SectionEnrollmentMgt.png?raw=true)
-#### We implemented Sorting into our API
-![Privilege escalation](https://github.com/maulikpatel1992/SchoolAPI/blob/Final_Snapshots/final%20project/Sorting_Courses.png?raw=true)
+
 
 ## Swagger API Snapshots:
 ![Privilege escalation](https://github.com/maulikpatel1992/SchoolAPI/blob/Final_Snapshots/final%20project/swagger/swagger1.JPG?raw=true)
