@@ -7,11 +7,10 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Entities.RequestFeatures;
-using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+
 
 namespace SchoolAPI.Controllers
 {
@@ -42,16 +41,11 @@ namespace SchoolAPI.Controllers
 
             var enrollmentsFromDb = await _repository.SecEnrollmentMgt.GetEnrollmentsAsync(userId, secEnrollmentParameters, trackChanges: false);
 
-            Response.Headers.Add("X-Pagination", 
-                JsonConvert.SerializeObject(enrollmentsFromDb.MetaData));
-
             var enrollmentsDto = _mapper.Map<IEnumerable<EnrollmentDto>>(enrollmentsFromDb);
 
             return Ok(enrollmentsDto);
         }
        [HttpGet("{id}", Name = "GetEnrollmentForUser")]
-        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)]
-        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> GetEnrollmentForUser(Guid userId, Guid id)
         {
             var user = await _repository.User.GetUserAsync(userId, trackChanges: false);
