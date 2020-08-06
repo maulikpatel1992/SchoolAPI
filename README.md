@@ -70,7 +70,7 @@ This API can perform the following operations:
 ### vii) Role Management: Only admins should be able to create new courses and sections. General users can only register for any course/section. Return the relevant response code if a general user tries to perform these actions.
 #### We already shown above for Creating Courses and Section by Admin
 
-#### Create Course Section : By user with Student Role
+#### Create Course Section : By user with Student Role will be fail as Studenet is not authorise to add course/course section
 ![Privilege escalation](https://github.com/maulikpatel1992/SchoolAPI/blob/Final_Snapshots/final%20project/7_UnauthoriseUser_CreateCourseSection.JPG?raw=true)
 
 ## Additional Features:
