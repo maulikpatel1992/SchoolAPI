@@ -7,6 +7,7 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Entities.RequestFeatures;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,7 @@ namespace SchoolAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<IActionResult> GetEnrollmentsForUser(Guid userId, [FromQuery] SecEnrollmentParameters secEnrollmentParameters)
         {
             var user = await _repository.User.GetUserAsync(userId, trackChanges: false);
@@ -45,7 +46,7 @@ namespace SchoolAPI.Controllers
 
             return Ok(enrollmentsDto);
         }
-       [HttpGet("{id}", Name = "GetEnrollmentForUser")]
+       [HttpGet("{id}", Name = "GetEnrollmentForUser"), Authorize]
         public async Task<IActionResult> GetEnrollmentForUser(Guid userId, Guid id)
         {
             var user = await _repository.User.GetUserAsync(userId, trackChanges: false);
@@ -67,7 +68,7 @@ namespace SchoolAPI.Controllers
             return Ok(enrollment);
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreateEnrollmentForUser"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateEnrollmentForUser(Guid userId, [FromBody] EnrollmentForCreationDto enrollment)
         {
             
@@ -101,7 +102,7 @@ namespace SchoolAPI.Controllers
             return CreatedAtRoute("GetEnrollmentForUser", new { userId, id = enrollmentToReturn.Id }, enrollmentToReturn);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteEnrollmentForUser(Guid userId, Guid id)
         {
             var user = await _repository.User.GetUserAsync(userId, trackChanges: false);
@@ -124,7 +125,7 @@ namespace SchoolAPI.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateEnrollmentForUser(Guid userId, Guid id, [FromBody] EnrollmentForUpdateDto enrollment)
         {
             if (enrollment == null)
@@ -158,7 +159,7 @@ namespace SchoolAPI.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> PartiallyUpdateEnrollmentForUser(Guid userId, Guid id, [FromBody] JsonPatchDocument<EnrollmentForUpdateDto> patchDoc)
         {
             if (patchDoc == null)

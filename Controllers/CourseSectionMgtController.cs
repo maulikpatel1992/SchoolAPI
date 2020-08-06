@@ -8,6 +8,7 @@ using Entities.DataTransferObjects;
 using Entities.Models;
 using Entities.RequestFeatures;
 using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +31,7 @@ namespace SchoolAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<IActionResult> GetCoursesectionsForCourse(Guid courseId, [FromQuery] CourseSectionMgtParameters courseSectionMgtParameters)
         {
             var course = await _repository.CourseMgt.GetCourseAsync(courseId, trackChanges: false);
@@ -49,7 +50,7 @@ namespace SchoolAPI.Controllers
             return Ok(coursesectionsDto);
         }
 
-        [HttpGet("{id}", Name="GetCoursesectionForCourse")]
+        [HttpGet("{id}", Name="GetCoursesectionForCourse"), Authorize]
         [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)]
         [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> GetCoursesectionForCourse(Guid courseId, Guid id)
@@ -73,7 +74,7 @@ namespace SchoolAPI.Controllers
             return Ok(coursesection);
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCourseSectionForCourse(Guid courseId, [FromBody] CourseSectionForCreationDto coursesection)
         {
             if (coursesection == null)
@@ -100,12 +101,12 @@ namespace SchoolAPI.Controllers
             _repository.CourseSectionMgt.CreateCourseSectionForCourse(courseId, coursesectionEntity);
             await _repository.SaveAsync();
 
-            var coursesectionToReturn = _mapper.Map<EnrollmentDto>(coursesectionEntity);
+            var coursesectionToReturn = _mapper.Map<CourseSectionDto>(coursesectionEntity);
 
             return CreatedAtRoute("GetCoursesectionForCourse", new { courseId, id = coursesectionToReturn.Id }, coursesectionToReturn);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCourseSectionForCourse(Guid courseId, Guid id)
         {
             var course = await _repository.CourseMgt.GetCourseAsync(courseId, trackChanges: false);
@@ -128,7 +129,7 @@ namespace SchoolAPI.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCourseSectionForCourse(Guid courseId, Guid id, [FromBody] CourseSectionForUpdateDto coursesection)
         {
             if (coursesection == null)
@@ -163,7 +164,7 @@ namespace SchoolAPI.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> PartiallyUpdateCourseSectionForCourse(Guid courseId, Guid id, [FromBody] JsonPatchDocument<CourseSectionForUpdateDto> patchDoc)
         {
             if (patchDoc == null)

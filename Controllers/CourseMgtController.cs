@@ -8,6 +8,7 @@ using Entities.DataTransferObjects;
 using Entities.Models;
 using Entities.RequestFeatures;
 using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +31,7 @@ namespace SchoolAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetCourses"), Authorize]
         public async Task<IActionResult> GetCourses([FromQuery] CourseMgtParameters courseMgtParameters)
         {
             try
@@ -48,7 +49,7 @@ namespace SchoolAPI.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "CourseById")]
+        [HttpGet("{id}", Name = "CourseById"), Authorize]
         [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)]
         [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> GetCourse(Guid id)
@@ -66,7 +67,7 @@ namespace SchoolAPI.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreateCourse"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCourse([FromBody] CourseForCreationDto course)
         {
             if (course == null)
@@ -91,7 +92,7 @@ namespace SchoolAPI.Controllers
             return CreatedAtRoute("CourseById", new { id = courseToReturn.Id }, courseToReturn);
         }
 
-        [HttpGet("collection/({ids})", Name = "CourseCollection")]
+        [HttpGet("collection/({ids})", Name = "CourseCollection"), Authorize]
         public async Task<IActionResult> GetCourseCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
             if (ids == null)
@@ -112,7 +113,7 @@ namespace SchoolAPI.Controllers
             return Ok(coursesToReturn);
         }
 
-        [HttpPost("collection")]
+        [HttpPost("collection"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCourseCollection([FromBody] IEnumerable<CourseForCreationDto> courseCollection)
         {
             if (courseCollection == null)
@@ -135,7 +136,7 @@ namespace SchoolAPI.Controllers
             return CreatedAtRoute("CourseCollection", new { ids }, courseCollectionToReturn);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCourse(Guid id)
         {
             var course = await _repository.CourseMgt.GetCourseAsync(id, trackChanges: false);
@@ -151,7 +152,7 @@ namespace SchoolAPI.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         public async Task<IActionResult> UpdateCourse(Guid id, [FromBody] CourseForUpdateDto course)
         {
             if (course == null)
@@ -179,7 +180,7 @@ namespace SchoolAPI.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}"), Authorize]
         public async Task<IActionResult> PartiallyUpdateCourse(Guid Id, [FromBody] JsonPatchDocument<CourseForUpdateDto> patchDoc)
         {
             if (patchDoc == null)

@@ -13,12 +13,13 @@ using Entities.Models;
 using SchoolAPI.ModelBinders;
 using Microsoft.AspNetCore.JsonPatch;
 using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SchoolAPI.Controllers
 {
     [Route("api/users")]
     [ApiController]
-    //[ResponseCache(CacheProfileName = "120SecondsDuration")]
+ 
     [ApiExplorerSettings(GroupName = "v1")]
     public class UserController : ControllerBase
     {
@@ -37,7 +38,7 @@ namespace SchoolAPI.Controllers
         /// Gets the list of all users
         /// </summary>
         /// <returns>The companies list</returns>
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<IActionResult> GetUsers()
         {
             try
@@ -55,7 +56,7 @@ namespace SchoolAPI.Controllers
             }
         }
 
-        [HttpGet("{id}", Name ="UserById")]
+        [HttpGet("{id}", Name ="UserById"), Authorize]
         [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)]
         [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> GetUser(Guid id)
@@ -73,7 +74,7 @@ namespace SchoolAPI.Controllers
             }
         }
 
-        [HttpPost]
+       [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] UserForCreationDto user)
         {
             if (user == null)
@@ -98,7 +99,7 @@ namespace SchoolAPI.Controllers
             return CreatedAtRoute("UserById", new { id = userToReturn.Id }, userToReturn);
         }
 
-        [HttpGet("collection/({ids})", Name = "UserCollection")]
+        [HttpGet("collection/({ids})", Name = "UserCollection"), Authorize]
         public async Task<IActionResult> GetUserCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {
             if (ids == null)
@@ -142,7 +143,7 @@ namespace SchoolAPI.Controllers
             return CreatedAtRoute("UserCollection", new { ids }, userCollectionToReturn);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
             var user = await _repository.User.GetUserAsync(id, trackChanges: false);
@@ -158,7 +159,7 @@ namespace SchoolAPI.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UserForUpdateDto user)
         {
             if (user == null)
@@ -187,7 +188,7 @@ namespace SchoolAPI.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}"), Authorize]
         public async Task<IActionResult> PartiallyUpdateUser(Guid Id, [FromBody] JsonPatchDocument<UserForUpdateDto> patchDoc)
         {
             if (patchDoc == null)

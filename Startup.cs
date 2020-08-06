@@ -14,6 +14,8 @@ using NLog;
 using System.IO;
 using SchoolAPI.Extensions;
 using AutoMapper;
+using Contracts;
+using SchoolAPI.Utility;
 
 namespace SchoolAPI
 {
@@ -39,9 +41,10 @@ namespace SchoolAPI
             services.ConfigureResponseCaching();
             services.ConfigureHttpCacheHeaders();
 
-            //services.AddAuthentication();
-            //services.ConfigureIdentity();
-            //services.ConfigureJWT(Configuration);
+            services.AddAuthentication();
+            services.ConfigureIdentity();
+            services.ConfigureJWT(Configuration);
+            services.AddScoped<IAuthenticationManager, AuthenticationManager>();
 
             services.Configure<ApiBehaviorOptions>(options => 
             { 
@@ -71,7 +74,7 @@ namespace SchoolAPI
             app.UseHttpCacheHeaders();
             app.UseRouting();
 
-            //app.UseAuthentication();
+            app.UseAuthentication();
             app.UseAuthorization(); 
             
 

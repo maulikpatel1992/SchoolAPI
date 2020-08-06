@@ -7,6 +7,7 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +29,7 @@ namespace SchoolAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<IActionResult> GetAssignmentsForCourse(Guid courseId)
         {
             var course = await _repository.CourseMgt.GetCourseAsync(courseId, trackChanges: false);
@@ -47,7 +48,7 @@ namespace SchoolAPI.Controllers
 
         
 
-        [HttpGet("{id}", Name = "GetAssignmentForCourse")]
+        [HttpGet("{id}", Name = "GetAssignmentForCourse"), Authorize]
         [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)]
         [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> GetAssignmentForCourse(Guid courseId, Guid id)
@@ -71,7 +72,7 @@ namespace SchoolAPI.Controllers
             return Ok(assignment);
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Teacher")]
         public async Task<IActionResult> CreateAssignmentForCourse(Guid courseId, [FromBody] AssignmentForCreationDto assignment)
         {
             if (assignment == null)
@@ -103,7 +104,7 @@ namespace SchoolAPI.Controllers
             return CreatedAtRoute("GetAssignmentForCourse", new { courseId, id = assignmentToReturn.Id }, assignmentToReturn);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Teacher")]
         public async Task<IActionResult> DeleteAssignmentForCourse(Guid courseId, Guid id)
         {
             var course = await _repository.CourseMgt.GetCourseAsync(courseId, trackChanges: false);
@@ -126,7 +127,7 @@ namespace SchoolAPI.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "Teacher")]
         public async Task<IActionResult> UpdateAssignmentForCourse(Guid courseId, Guid id, [FromBody] AssignmentForUpdateDto assignment)
         {
             if (assignment == null)
@@ -161,7 +162,7 @@ namespace SchoolAPI.Controllers
             return NoContent();
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}"), Authorize(Roles = "Teacher")]
         public async Task<IActionResult> PartiallyUpdateAssignmentForCourse(Guid courseId, Guid id, [FromBody] JsonPatchDocument<AssignmentForUpdateDto> patchDoc)
         {
             if (patchDoc == null)

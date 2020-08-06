@@ -31,6 +31,7 @@ namespace SchoolAPI
             CreateMap<CourseForUpdateDto, CourseMgt>().ReverseMap();
             CreateMap<SecAssignmentForCreationDto, SecAssignmentMgt>();
             CreateMap<SecAssignmentForUpdateDto, SecAssignmentMgt>().ReverseMap();
+            CreateMap<UserForRegistrationDto, UserAuth>();
         }
     }
 }

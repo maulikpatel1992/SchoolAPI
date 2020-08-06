@@ -1,0 +1,13 @@
+2020-08-05 01:10:26.2544 ERROR Invalid model state for the CourseForCreationDto object
+2020-08-05 01:11:54.4129 WARN Authenticate: Authentication failed. Wrong user name or password.
+2020-08-05 17:51:33.2903 INFO User with id: 00000000-0000-0000-0000-000000000000 doesn't exist in the database.
+2020-08-05 18:14:29.3922 WARN Authenticate: Authentication failed. Wrong user name or password.
+2020-08-05 18:14:43.3242 WARN Authenticate: Authentication failed. Wrong user name or password.
+2020-08-05 18:14:53.9137 WARN Authenticate: Authentication failed. Wrong user name or password.
+2020-08-05 18:15:01.4191 WARN Authenticate: Authentication failed. Wrong user name or password.
+2020-08-05 18:19:07.9627 WARN Authenticate: Authentication failed. Wrong user name or password.
+2020-08-05 18:19:30.7939 WARN Authenticate: Authentication failed. Wrong user name or password.
+2020-08-05 20:44:22.8471 INFO User can not register using Admin role. Please register using correct role
+2020-08-05 20:49:46.7515 ERROR User can not register using Admin role. Please register using correct role
+2020-08-05 21:02:16.1714 WARN Authenticate: Authentication failed. Wrong user name or password.
+2020-08-05 21:04:49.1523 ERROR User can not register using Admin role. Please register using correct role
